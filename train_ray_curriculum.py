@@ -61,7 +61,7 @@ if __name__ == "__main__":
         name="PPO_curriculum",
         config={
             # system settings
-            "num_gpus": 1,
+            "num_gpus": 0,# Unity simulation CAN NOT use GPU && MLP is too small => keep CPU only
             "num_workers": 14,
             "num_envs_per_worker": NUM_ENVS_PER_WORKER,
             "log_level": "INFO",

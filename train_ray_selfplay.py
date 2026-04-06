@@ -5,7 +5,7 @@ from ray.rllib.agents.callbacks import DefaultCallbacks
 from utils import create_rllib_env
 
 
-NUM_ENVS_PER_WORKER = 3
+NUM_ENVS_PER_WORKER = 1
 
 
 def policy_mapping_fn(agent_id, *args, **kwargs):
@@ -50,8 +50,8 @@ if __name__ == "__main__":
         name="PPO_selfplay_rec",
         config={
             # system settings
-            "num_gpus": 1,
-            "num_workers": 12,
+            "num_gpus": 0, # Unity simulation CAN NOT use GPU && MLP is too small => keep CPU only
+            "num_workers": 22,
             "num_envs_per_worker": NUM_ENVS_PER_WORKER,
             "log_level": "INFO",
             "framework": "torch",
@@ -78,11 +78,12 @@ if __name__ == "__main__":
             "rollout_fragment_length": 5000,
             "batch_mode": "complete_episodes",
         },
-        stop={"timesteps_total": 15000000, "time_total_s": 7200,},  # 2h
+        # stop={"timesteps_total": 15000000, "time_total_s": 7200,},  # 2h
+        stop={"timesteps_total": 15000000, "time_total_s": 43200,},  # 12h
         checkpoint_freq=100,
         checkpoint_at_end=True,
         local_dir="./ray_results",
-        # restore="./ray_results/PPO_selfplay_twos_2/PPO_Soccer_a8b44_00000_0_2021-09-18_11-13-55/checkpoint_000600/checkpoint-600",
+        restore="./ray_results/PPO_selfplay_rec/PPO_Soccer_30b0b_00000_0_2026-04-06_02-09-38/checkpoint_000183/checkpoint-183",
     )
 
     # Gets best trial based on max accuracy across all training iterations.
