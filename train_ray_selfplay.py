@@ -50,8 +50,8 @@ if __name__ == "__main__":
         name="PPO_selfplay_rec",
         config={
             # system settings
-            "num_gpus": 1,
-            "num_workers": 8,
+            "num_gpus": 0,
+            "num_workers": 2,
             "num_envs_per_worker": NUM_ENVS_PER_WORKER,
             "log_level": "INFO",
             "framework": "torch",
@@ -64,7 +64,8 @@ if __name__ == "__main__":
                     "opponent_2": (None, obs_space, act_space, {}),
                     "opponent_3": (None, obs_space, act_space, {}),
                 },
-                "policy_mapping_fn": tune.function(policy_mapping_fn),
+                # "policy_mapping_fn": tune.function(policy_mapping_fn),
+                "policy_mapping_fn": policy_mapping_fn,
                 "policies_to_train": ["default"],
             },
             "env": "Soccer",
@@ -78,7 +79,7 @@ if __name__ == "__main__":
             "batch_mode": "complete_episodes",
         },
         stop={"timesteps_total": 15000000, "time_total_s": 7200,},  # 2h
-        checkpoint_freq=100,
+        checkpoint_freq=10,
         checkpoint_at_end=True,
         local_dir="./ray_results",
         # restore="./ray_results/PPO_selfplay_twos_2/PPO_Soccer_a8b44_00000_0_2021-09-18_11-13-55/checkpoint_000600/checkpoint-600",
