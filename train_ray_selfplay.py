@@ -83,7 +83,7 @@ if __name__ == "__main__":
         checkpoint_freq=100,
         checkpoint_at_end=True,
         local_dir="./ray_results",
-        restore="./ray_results/PPO_selfplay_rec/PPO_Soccer_30b0b_00000_0_2026-04-06_02-09-38/checkpoint_000183/checkpoint-183",
+        restore="./ray_results/PPO_selfplay_rec/PPO_Soccer_36ca0_00000_0_2026-04-07_18-00-41/checkpoint_001000/checkpoint-1000", #ray 1.4 retrain version
     )
 
     # Gets best trial based on max accuracy across all training iterations.
