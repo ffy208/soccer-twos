@@ -1,6 +1,5 @@
 envs/
 ray_results/
-ceia_baseline_agent/
 data/
 
 # Byte-compiled / optimized / DLL files
