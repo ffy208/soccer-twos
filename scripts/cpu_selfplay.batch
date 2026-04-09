@@ -21,7 +21,13 @@ conda activate soccertwos
 
 # Fix protobuf version conflict with ray==1.4.0
 export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
-pip install "numpy==1.23.5" -q  # fix numpy version conflict with ray==1.4.0
+# pip install "numpy==1.23.5" -q  # fix numpy version conflict with ray==1.4.0
+# ray stop --force
+pkill -u $USER -f soccer
+pkill -u $USER -f Unity
+
+export RAY_DISABLE_IMPORT_WARNING=1
+export RAY_DASHBOARD_DISABLED=1
 
 # Run the training script
 /storage/ice1/7/4/fyang365/.conda/conda_envs/soccertwos/bin/python train_ray_selfplay.py

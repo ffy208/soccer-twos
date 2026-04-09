@@ -38,6 +38,8 @@ class SelfPlayUpdateCallback(DefaultCallbacks):
 
 if __name__ == "__main__":
     ray.init()
+    # #ray.init(include_dashboard=False)
+    # ray.init(include_dashboard=False, ignore_reinit_error=True)
 
     tune.registry.register_env("Soccer", create_rllib_env)
     temp_env = create_rllib_env()
@@ -64,8 +66,8 @@ if __name__ == "__main__":
                     "opponent_2": (None, obs_space, act_space, {}),
                     "opponent_3": (None, obs_space, act_space, {}),
                 },
-                # "policy_mapping_fn": tune.function(policy_mapping_fn),
-                "policy_mapping_fn": policy_mapping_fn,
+                "policy_mapping_fn": tune.function(policy_mapping_fn),
+                # "policy_mapping_fn": policy_mapping_fn,
                 "policies_to_train": ["default"],
             },
             "env": "Soccer",
@@ -79,11 +81,12 @@ if __name__ == "__main__":
             "batch_mode": "complete_episodes",
         },
         # stop={"timesteps_total": 15000000, "time_total_s": 7200,},  # 2h
-        stop={"timesteps_total": 15000000, "time_total_s": 43200,},  # 12h
+        # stop={"timesteps_total": 15000000, "time_total_s": 43200,},  # 12h
+        stop={"timesteps_total": 15000000, "time_total_s": 86400,},  # 24h
         checkpoint_freq=100,
         checkpoint_at_end=True,
         local_dir="./ray_results",
-        restore="./ray_results/PPO_selfplay_rec/PPO_Soccer_36ca0_00000_0_2026-04-07_18-00-41/checkpoint_001000/checkpoint-1000", #ray 1.4 retrain version
+        #restore="./ray_results/PPO_selfplay_rec/PPO_Soccer_36ca0_00000_0_2026-04-07_18-00-41/checkpoint_001000/checkpoint-1000", #ray 1.4 retrain version
     )
 
     # Gets best trial based on max accuracy across all training iterations.
