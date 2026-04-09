@@ -66,8 +66,10 @@ if __name__ == "__main__":
                     "opponent_2": (None, obs_space, act_space, {}),
                     "opponent_3": (None, obs_space, act_space, {}),
                 },
-                "policy_mapping_fn": tune.function(policy_mapping_fn),
-                # "policy_mapping_fn": policy_mapping_fn,
+                # "policy_mapping_fn": tune.function(policy_mapping_fn), 
+                # # DeprecationWarning: wrapping <function policy_mapping_fn at 0x155547bb4550> with tune.function() is no longer needed
+                # So I changed to the line below 
+                "policy_mapping_fn": policy_mapping_fn,
                 "policies_to_train": ["default"],
             },
             "env": "Soccer",
