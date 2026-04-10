@@ -15,7 +15,7 @@ from soccer_twos import AgentInterface
 ALGORITHM = "PPO"
 CHECKPOINT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    "../ray_results/PPO_selfplay_rec/PPO_Soccer_36ca0_00000_0_2026-04-07_18-00-41/checkpoint_001000/checkpoint-1000", #ray 1.4 retrain version
+    "../ray_results/PPO_selfplay_rec/PPO_Soccer_bc696_00000_0_2026-04-09_14-12-58/checkpoint_000700/checkpoint-700", #ray 1.4 retrain version
 )
 POLICY_NAME = "default"
 
@@ -72,19 +72,19 @@ class RewardShapingPPOAgent(AgentInterface):
         # load state from checkpoint
 
         # ===== PATCH for Ray 1.4 checkpoint loading =====
-        #agent.restore(CHECKPOINT_PATH)
-        # replace:  agent.restore(CHECKPOINT_PATH)
-        with open(CHECKPOINT_PATH, "rb") as f:
-            checkpoint_data = pickle.load(f)
-        worker_state = pickle.loads(checkpoint_data["worker"])
-        weights = {
-            pid: {
-                k: v for k, v in state.items()
-                if k != "_optimizer_variables"
-            }
-            for pid, state in worker_state["state"].items()
-        }
-        agent.workers.local_worker().set_weights(weights)
+        agent.restore(CHECKPOINT_PATH)
+        # # replace:  agent.restore(CHECKPOINT_PATH)
+        # with open(CHECKPOINT_PATH, "rb") as f:
+        #     checkpoint_data = pickle.load(f)
+        # worker_state = pickle.loads(checkpoint_data["worker"])
+        # weights = {
+        #     pid: {
+        #         k: v for k, v in state.items()
+        #         if k != "_optimizer_variables"
+        #     }
+        #     for pid, state in worker_state["state"].items()
+        # }
+        # agent.workers.local_worker().set_weights(weights)
         # ===== END PATCH =====
         
         # get policy for evaluation
