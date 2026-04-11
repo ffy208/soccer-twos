@@ -24,7 +24,7 @@ class SelfPlayUpdateCallback(DefaultCallbacks):
         """
         Update multiagent oponent weights when reward is high enough
         """
-        if info["result"]["episode_reward_mean"] > 0.5:
+        if info["result"]["episode_reward_mean"] > -0.05:  # adjusted for shaped reward (original 0.5 never triggers)
             print("---- Updating opponents!!! ----")
             trainer = info["trainer"]
             trainer.set_weights(
