@@ -5,7 +5,7 @@ from ray.rllib.agents.callbacks import DefaultCallbacks
 from utils import create_rllib_env
 
 
-NUM_ENVS_PER_WORKER = 1
+NUM_ENVS_PER_WORKER = 3
 
 
 def policy_mapping_fn(agent_id, *args, **kwargs):
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         config={
             # system settings
             "num_gpus": 0, # Unity simulation CAN NOT use GPU && MLP is too small => keep CPU only
-            "num_workers": 22,
+            "num_workers": 7,
             "num_envs_per_worker": NUM_ENVS_PER_WORKER,
             "log_level": "INFO",
             "framework": "torch",
