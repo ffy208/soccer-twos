@@ -63,23 +63,23 @@ class RewardShapingWrapper(gym.core.Wrapper, MultiAgentEnv):
             to_ball = ball_pos - player_pos
             dist = np.linalg.norm(to_ball) + 1e-6
             approach_reward = np.dot(player_vel, to_ball / dist)  # [-v_max, v_max]
-            shaped[aid] += 0.01 * approach_reward
+            shaped[aid] += 0.0002 * approach_reward  # reduced 50x: game signal must dominate
 
             # Signal 2: kick reward — ball speed increased since last step
             if self.prev_ball_vel is not None:
                 delta_speed = np.linalg.norm(ball_vel) - np.linalg.norm(self.prev_ball_vel)
                 if delta_speed > 0 and dist < 1.5:  # only credit nearby agent
-                    shaped[aid] += 0.05 * delta_speed
+                    shaped[aid] += 0.001 * delta_speed  # reduced 50x
 
             # Signal 3: offensive reward — ball moving toward opponent goal
-            shaped[aid] += 0.02 * ball_vel[0] * attack_dir
+            shaped[aid] += 0.0004 * ball_vel[0] * attack_dir  # reduced 50x
 
             # Signal 4: defensive penalty — ball dangerously close to own goal
             danger = max(0.0, 1.0 - abs(ball_pos[0] - own_goal_x) / 5.0)
-            shaped[aid] -= 0.05 * danger
+            shaped[aid] -= 0.001 * danger  # reduced 50x
 
             # Signal 5: time-step penalty — discourage stalling
-            shaped[aid] -= 0.001
+            shaped[aid] -= 0.00002  # reduced 50x
 
         # Signal 6: separation reward — teammates should cover different zones
         for team_start in (0, 2):
@@ -89,7 +89,7 @@ class RewardShapingWrapper(gym.core.Wrapper, MultiAgentEnv):
                 pos1 = np.array(info[ids[1]]["player_info"]["position"])
                 sep = min(float(np.linalg.norm(pos0 - pos1)), 5.0)
                 for i in ids:
-                    shaped[i] += 0.005 * sep
+                    shaped[i] += 0.0001 * sep  # reduced 50x
 
         self.prev_ball_vel = ball_vel
 
