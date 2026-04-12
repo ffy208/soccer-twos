@@ -24,7 +24,10 @@ class SelfPlayUpdateCallback(DefaultCallbacks):
         """
         Update multiagent oponent weights when reward is high enough
         """
-        if info["result"]["episode_reward_mean"] > 0.3:  # game signal now dominates (shaped reward ~0.3/episode, game ±1/goal)
+        # if info["result"]["episode_reward_mean"] > 0.3:  # game signal now dominates (shaped reward ~0.3/episode, game ±1/goal)
+        # Use default policy's own reward (not episode mean which averages all policies to ~0 in self-play)
+        default_reward = info["result"].get("policy_reward_mean", {}).get("default", -999)
+        if default_reward > 0.2:
             print("---- Updating opponents!!! ----")
             trainer = info["trainer"]
             trainer.set_weights(
@@ -88,7 +91,7 @@ if __name__ == "__main__":
         checkpoint_freq=100,
         checkpoint_at_end=True,
         local_dir="./ray_results",
-        # restore removed: training from scratch with corrected reward shaping (50x reduced coefficients)
+        restore="./ray_results/PPO_selfplay_rec/PPO_Soccer_eb80a_00000_0_2026-04-12_02-57-50/checkpoint_000900/checkpoint-900",
     )
 
     # Gets best trial based on max accuracy across all training iterations.
