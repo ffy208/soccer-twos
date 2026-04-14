@@ -27,7 +27,7 @@ from utils import create_rllib_env
 
 
 NUM_ENVS_PER_WORKER = 3
-OPPONENT_UPDATE_THRESHOLD = 0.3
+OPPONENT_UPDATE_THRESHOLD = 0.25
 OPPONENT_UPDATE_COOLDOWN = 20  # minimum iterations between updates
 
 # ── Paths (relative to project root; adjust if needed) ───────────────────────
@@ -39,7 +39,7 @@ CEIA_CHECKPOINT = os.path.join(
 
 RESTORE_CHECKPOINT = (
     "./ray_results/PPO_team/"
-    "PPO_Soccer_0bff0_00000_0_2026-04-13_16-19-17/checkpoint_001600/checkpoint-1600"
+    "PPO_Soccer_6dc4e_00000_0_2026-04-13_21-01-12/checkpoint_002429/checkpoint-2429"
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ def policy_mapping_fn(agent_id, *args, **kwargs):
         return "default"
     return np.random.choice(
         ["opponent_1", "opponent_2", "opponent_3"],
-        p=[0.35, 0.25, 0.40],  # 40% vs ceia_baseline, more direct training signal
+        p=[0.30, 0.20, 0.50],  # 50% vs ceia_baseline, sustained pressure on fixed benchmark
     )
 
 
