@@ -144,8 +144,8 @@ if __name__ == "__main__":
             "batch_mode": "complete_episodes",
         },
         stop={
-            "timesteps_total": 30000000,
-            "time_total_s": 86400,   # 24 h
+            "timesteps_total": 60000000,
+            "time_total_s": 259200,   # 72 h
         },
         checkpoint_freq=100,
         checkpoint_at_end=True,
