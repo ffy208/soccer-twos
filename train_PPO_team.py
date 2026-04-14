@@ -11,7 +11,7 @@ Opponent pool:
   opponent_3: FIXED ceia_baseline weights (never updated)
 
 Opponent update rule:
-  When policy_reward_mean/default > 0.3, shift the rolling snapshots:
+  When policy_reward_mean/default > OPPONENT_UPDATE_THRESHOLD, shift the rolling snapshots:
     opponent_2 ← opponent_1
     opponent_1 ← default
   opponent_3 stays as ceia_baseline forever.
@@ -27,6 +27,8 @@ from utils import create_rllib_env
 
 
 NUM_ENVS_PER_WORKER = 3
+OPPONENT_UPDATE_THRESHOLD = 0.3
+OPPONENT_UPDATE_COOLDOWN = 20  # minimum iterations between updates
 
 # ── Paths (relative to project root; adjust if needed) ───────────────────────
 CEIA_CHECKPOINT = os.path.join(
@@ -36,8 +38,8 @@ CEIA_CHECKPOINT = os.path.join(
 )
 
 RESTORE_CHECKPOINT = (
-    "./ray_results/PPO_selfplay_rec/"
-    "PPO_Soccer_d156b_00000_0_2026-04-12_14-38-37/checkpoint_001000/checkpoint-1000"
+    "./ray_results/PPO_team/"
+    "PPO_Soccer_0bff0_00000_0_2026-04-13_16-19-17/checkpoint_001600/checkpoint-1600"
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -51,7 +53,7 @@ def policy_mapping_fn(agent_id, *args, **kwargs):
         return "default"
     return np.random.choice(
         ["opponent_1", "opponent_2", "opponent_3"],
-        p=[0.50, 0.25, 0.25],  # 25% chance vs ceia_baseline each episode
+        p=[0.35, 0.25, 0.40],  # 40% vs ceia_baseline, more direct training signal
     )
 
 
@@ -70,6 +72,7 @@ class LeagueCallback(DefaultCallbacks):
     def __init__(self):
         super().__init__()
         self._ceia_initialized = False
+        self._last_update_iter = -OPPONENT_UPDATE_COOLDOWN
 
     def on_train_result(self, **info):
         trainer = info["trainer"]
@@ -86,14 +89,19 @@ class LeagueCallback(DefaultCallbacks):
             self._ceia_initialized = True
 
         # Shift rolling selfplay snapshots when default is winning enough
+        # Cooldown prevents cluster updates from reducing opponent diversity
+        current_iter = info["result"]["training_iteration"]
         default_reward = info["result"].get("policy_reward_mean", {}).get("default", -999)
-        if default_reward > 0.3:
-            print(f"---- Promoting opponents (default_reward={default_reward:.3f}) ----")
+        since_last = current_iter - self._last_update_iter
+
+        if default_reward > OPPONENT_UPDATE_THRESHOLD and since_last >= OPPONENT_UPDATE_COOLDOWN:
+            print(f"---- Promoting opponents (default_reward={default_reward:.3f}, gap={since_last}) ----")
             trainer.set_weights({
                 "opponent_2": trainer.get_weights(["opponent_1"])["opponent_1"],
                 "opponent_1": trainer.get_weights(["default"])["default"],
                 # opponent_3 intentionally skipped
             })
+            self._last_update_iter = current_iter
 
 
 if __name__ == "__main__":
