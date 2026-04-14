@@ -27,7 +27,7 @@ from utils import create_rllib_env
 
 
 NUM_ENVS_PER_WORKER = 3
-OPPONENT_UPDATE_THRESHOLD = 0.25
+OPPONENT_UPDATE_THRESHOLD = 0.08
 OPPONENT_UPDATE_COOLDOWN = 20  # minimum iterations between updates
 
 # ── Paths (relative to project root; adjust if needed) ───────────────────────
@@ -39,7 +39,7 @@ CEIA_CHECKPOINT = os.path.join(
 
 RESTORE_CHECKPOINT = (
     "./ray_results/PPO_team/"
-    "PPO_Soccer_6dc4e_00000_0_2026-04-13_21-01-12/checkpoint_002429/checkpoint-2429"
+    "PPO_Soccer_459c4_00000_0_2026-04-14_11-40-32/checkpoint_003100/checkpoint-3100"
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
