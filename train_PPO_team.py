@@ -39,7 +39,7 @@ CEIA_CHECKPOINT = os.path.join(
 
 RESTORE_CHECKPOINT = (
     "./ray_results/PPO_team/"
-    "PPO_Soccer_d115d_00000_0_2026-04-15_14-35-03/checkpoint_004700/checkpoint-4700"
+    "PPO_Soccer_c72dd_00000_0_2026-04-15_17-55-13/checkpoint_006100/checkpoint-6100"
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
