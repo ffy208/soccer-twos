@@ -146,7 +146,7 @@ if __name__ == "__main__":
         },
         stop={
             "timesteps_total": 60000000,
-            "time_total_s": 259200,   # 72 h
+            "time_total_s": 518400,   # 144 h
         },
         checkpoint_freq=100,
         checkpoint_at_end=True,
