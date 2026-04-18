@@ -39,7 +39,7 @@ CEIA_CHECKPOINT = os.path.join(
 
 RESTORE_CHECKPOINT = (
     "./ray_results/PPO_team/"
-    "PPO_Soccer_d745c_00000_0_2026-04-16_22-33-39/checkpoint_007500/checkpoint-7500"
+    "PPO_Soccer_aba60_00000_0_2026-04-17_14-31-38/checkpoint_008396/checkpoint-8396"
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ def policy_mapping_fn(agent_id, *args, **kwargs):
         return "default"
     return np.random.choice(
         ["opponent_1", "opponent_2", "opponent_3"],
-        p=[0.30, 0.20, 0.50],  # 50% vs ceia_baseline, sustained pressure on fixed benchmark
+        p=[0.15, 0.15, 0.70]  # 70% ceia
     )
 
 
@@ -140,6 +140,7 @@ if __name__ == "__main__":
                 "fcnet_hiddens": [256, 256],
                 "fcnet_activation": "relu",
             },
+            "entropy_coeff": 0.01, # encourage exploration against fixed opponents
             "rollout_fragment_length": 5000,
             "batch_mode": "complete_episodes",
         },
