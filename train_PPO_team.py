@@ -27,8 +27,8 @@ from utils import create_rllib_env
 
 
 NUM_ENVS_PER_WORKER = 3
-OPPONENT_UPDATE_THRESHOLD = 0.08
-OPPONENT_UPDATE_COOLDOWN = 20  # minimum iterations between updates
+OPPONENT_UPDATE_THRESHOLD = 0.25
+OPPONENT_UPDATE_COOLDOWN = 100  # minimum iterations between updates
 
 # ── Paths (relative to project root; adjust if needed) ───────────────────────
 CEIA_CHECKPOINT = os.path.join(
@@ -39,7 +39,7 @@ CEIA_CHECKPOINT = os.path.join(
 
 RESTORE_CHECKPOINT = (
     "./ray_results/PPO_team/"
-    "PPO_Soccer_aba60_00000_0_2026-04-17_14-31-38/checkpoint_008396/checkpoint-8396"
+    "PPO_Soccer_05196_00000_0_2026-04-18_15-23-03/checkpoint_009800/checkpoint-9800"
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ def policy_mapping_fn(agent_id, *args, **kwargs):
         return "default"
     return np.random.choice(
         ["opponent_1", "opponent_2", "opponent_3"],
-        p=[0.15, 0.15, 0.70]  # 70% ceia
+        p=[0.08, 0.07, 0.85]  # 85% ceia, slow self-play arms race
     )
 
 
