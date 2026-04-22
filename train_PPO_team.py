@@ -39,7 +39,7 @@ CEIA_CHECKPOINT = os.path.join(
 
 RESTORE_CHECKPOINT = (
     "./ray_results/PPO_team/"
-    "PPO_Soccer_05196_00000_0_2026-04-18_15-23-03/checkpoint_009800/checkpoint-9800"
+    "PPO_Soccer_607b5_00000_0_2026-04-21_21-19-58/checkpoint_013500/checkpoint-13500"
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ def policy_mapping_fn(agent_id, *args, **kwargs):
         return "default"
     return np.random.choice(
         ["opponent_1", "opponent_2", "opponent_3"],
-        p=[0.08, 0.07, 0.85]  # 85% ceia, slow self-play arms race
+        p=[0.00, 0.00, 1.00]  # 100% ceia, no self-play
     )
 
 
@@ -140,13 +140,17 @@ if __name__ == "__main__":
                 "fcnet_hiddens": [256, 256],
                 "fcnet_activation": "relu",
             },
-            "entropy_coeff": 0.01, # encourage exploration against fixed opponents
+            "clip_param": 0.2,          # standard PPO (default 0.3 too aggressive)
+            "lambda": 0.95,             # GAE (default 1.0 = high variance MC)
+            "lr": 3e-4,                 # Unity Soccer recommended (default 5e-5 too slow)
+            "vf_loss_coeff": 0.5,       # reduce VF interference (vf_share_layers=True)
+            "entropy_coeff": 0.005,     # Unity Soccer recommended beta
             "rollout_fragment_length": 5000,
             "batch_mode": "complete_episodes",
         },
         stop={
-            "timesteps_total": 60000000,
-            "time_total_s": 518400,   # 144 h
+            "timesteps_total": 120000000,
+            "time_total_s": 5184000,   # 1440 h
         },
         checkpoint_freq=100,
         checkpoint_at_end=True,
