@@ -2,7 +2,7 @@
 
 **Agent name:** RewardShapingPPO
 
-**Author(s):** Bo Feng (bfeng66@gatech.edu), Frank Yang
+**Author(s):** Bo Feng (bfeng66@gatech.edu), Frank Yang (frank.yang@gatech.edu)
 
 ## Description
 
